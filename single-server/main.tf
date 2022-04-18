@@ -4,7 +4,7 @@ provider "aws" {
 }
 
 resource "aws_instance" "example" {
-  ami                    = "ami-0c55b159cbfafe1f0"
+  ami                    = "ami-02e67f70dd7967c1f"
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.instance.id]
 
