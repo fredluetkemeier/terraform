@@ -1,12 +1,21 @@
-variable "server_port" {
-  description = "The port the server will use for HTTP requests"
-  type        = number
-  default     = 8080
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 2.0"
+    }
+  }
 }
 
 provider "aws" {
   region  = "us-east-2"
   profile = "fred.luetkemeier"
+}
+
+variable "server_port" {
+  description = "The port the server will use for HTTP requests"
+  type        = number
+  default     = 8080
 }
 
 data "aws_vpc" "default" {
@@ -35,7 +44,7 @@ resource "aws_launch_configuration" "example" {
 
 resource "aws_autoscaling_group" "example" {
   launch_configuration = aws_launch_configuration.example.name
-  vpc_zone_identifier  = data.aws_subnet_ids.default
+  vpc_zone_identifier  = data.aws_subnet_ids.default.ids
 
   target_group_arns = [aws_lb_target_group.asg.arn]
   health_check_type = "ELB"
@@ -73,6 +82,22 @@ resource "aws_lb_listener" "http" {
   }
 }
 
+resource "aws_lb_listener_rule" "asg" {
+  listener_arn = aws_lb_listener.http.arn
+  priority     = 100
+
+  condition {
+    path_pattern {
+      values = ["*"]
+    }
+  }
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.asg.arn
+  }
+}
+
 resource "aws_lb_target_group" "asg" {
   name     = "terraform-as-example"
   port     = var.server_port
@@ -104,14 +129,14 @@ resource "aws_security_group" "instance" {
 resource "aws_security_group" "alb" {
   name = "terraform-example-alb"
 
-  ingress = [{
+  ingress {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
-  }]
+  }
 
-  egress = {
+  egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
@@ -119,7 +144,12 @@ resource "aws_security_group" "alb" {
   }
 }
 
-output "public_ip" {
-  value       = aws_instance.example.public_ip
-  description = "The public IP address of the web server"
+# output "public_ip" {
+#   value       = aws_instance.example.public_ip
+#   description = "The public IP address of the web server"
+# }
+
+output "alb_dns_name" {
+  value       = aws_lb.example.dns_name
+  description = "The domain name of the load balancer"
 }
