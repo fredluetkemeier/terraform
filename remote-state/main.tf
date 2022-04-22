@@ -6,10 +6,10 @@ terraform {
     }
   }
 
-  backend "s3" {
-    profile = "fred.luetkemeier"
-    key     = "global/s3/terraform.tfstate"
-  }
+  #   backend "s3" {
+  #     profile = "fred.luetkemeier"
+  #     key     = "global/s3/terraform.tfstate"
+  #   }
 }
 
 provider "aws" {
@@ -20,9 +20,9 @@ provider "aws" {
 resource "aws_s3_bucket" "terraform_state" {
   bucket = "fredluetkemeier-terraform-up-and-running-state"
 
-  lifecycle {
-    prevent_destroy = true
-  }
+  #   lifecycle {
+  #     prevent_destroy = true
+  #   }
 
   versioning {
     enabled = true
