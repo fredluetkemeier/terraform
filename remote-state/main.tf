@@ -5,6 +5,17 @@ terraform {
       version = "~> 2.0"
     }
   }
+
+  backend "s3" {
+    profile = "fred.luetkemeier"
+
+    bucket = "fredluetkemeier-terraform-up-and-running-state"
+    key    = "global/s3/terraform.tfstate"
+    region = "us-east-2"
+
+    dynamodb_table = "terraform-up-and-running-locks"
+    encrypt        = true
+  }
 }
 
 provider "aws" {
