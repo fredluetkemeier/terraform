@@ -6,10 +6,10 @@ terraform {
     }
   }
 
-  #   backend "s3" {
-  #     profile = "fred.luetkemeier"
-  #     key     = "global/s3/terraform.tfstate"
-  #   }
+  backend "s3" {
+    profile = "fred.luetkemeier"
+    key     = "global/s3/terraform.tfstate"
+  }
 }
 
 provider "aws" {
