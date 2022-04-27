@@ -20,8 +20,8 @@ data "terraform_remote_state" "db" {
 
   config = {
     profile = "fred.luetkemeier"
-    bucket  = "fredluetkemeier-terraform-up-and-running-state"
-    key     = "stage/data-stores/mysql/terraform.tfstate"
+    bucket  = "${db_remote_state_bucket}"
+    key     = "${db_remote_state_key}"
     region  = "us-east-2"
   }
 }
@@ -121,7 +121,7 @@ resource "aws_lb_target_group" "asg" {
 }
 
 resource "aws_security_group" "instance" {
-  name = "terraform-example-instance"
+  name = "${var.cluster_name}-instance"
 
   ingress {
     from_port   = var.server_port
@@ -132,7 +132,7 @@ resource "aws_security_group" "instance" {
 }
 
 resource "aws_security_group" "alb" {
-  name = "terraform-example-alb"
+  name = "${var.cluster_name}-alb"
 
   ingress {
     from_port   = 80
