@@ -3,7 +3,7 @@ terraform {
     profile = "fred.luetkemeier"
 
     bucket = "fredluetkemeier-terraform-up-and-running-state"
-    key    = "stage/data-stores/mysql/terraform.tfstate"
+    key    = "prod/data-stores/mysql/terraform.tfstate"
     region = "us-east-2"
 
     dynamodb_table = "terraform-up-and-running-locks"
@@ -19,6 +19,6 @@ provider "aws" {
 module "mysql" {
   source = "../../../modules/data-stores/mysql"
 
-  db_name     = "terraform-up-and-running-stage"
+  db_name     = "terraform-up-and-running-prod"
   db_password = var.db_password
 }
