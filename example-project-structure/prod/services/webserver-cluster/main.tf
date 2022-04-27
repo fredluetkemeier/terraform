@@ -1,7 +1,7 @@
-terraform {
+backend "s3" {
   backend "s3" {
     profile        = "fred.luetkemeier"
-    key            = "stage/services/webserver-cluster/terraform.tfstate"
+    key            = "prod/services/webserver-cluster/terraform.tfstate"
     bucket         = "fredluetkemeier-terraform-up-and-running-state"
     region         = "us-east-2"
     dynamodb_table = "terraform-up-and-running-locks"
@@ -17,5 +17,3 @@ provider "aws" {
 module "webserver_cluster" {
   source = "../../../modules/services/webserver-cluster"
 }
-
-
