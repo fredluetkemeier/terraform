@@ -1,4 +1,10 @@
 terraform {
+  required_providers {
+    aws = {
+      version = "~> 2.0"
+    }
+  }
+
   backend "s3" {
     profile = "fred.luetkemeier"
 

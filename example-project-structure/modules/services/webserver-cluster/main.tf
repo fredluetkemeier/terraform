@@ -1,7 +1,6 @@
 terraform {
   required_providers {
     aws = {
-      source  = "hashicorp/aws"
       version = "~> 2.0"
     }
   }
@@ -20,8 +19,8 @@ data "terraform_remote_state" "db" {
 
   config = {
     profile = "fred.luetkemeier"
-    bucket  = "${db_remote_state_bucket}"
-    key     = "${db_remote_state_key}"
+    bucket  = var.db_remote_state_bucket
+    key     = var.db_remote_state_key
     region  = "us-east-2"
   }
 }
@@ -132,7 +131,7 @@ resource "aws_security_group" "instance" {
   name = "${var.cluster_name}-instance"
 }
 
-resource "aws_security_group" "allow_http_inbound" {
+resource "aws_security_group_rule" "instance_allow_http_inbound" {
   type              = "ingress"
   security_group_id = aws_security_group.instance.id
 
@@ -147,7 +146,7 @@ resource "aws_security_group" "alb" {
   name = "${var.cluster_name}-alb"
 }
 
-resource "aws_security_group" "allow_http_inbound" {
+resource "aws_security_group_rule" "alb_allow_http_inbound" {
   type              = "ingress"
   security_group_id = aws_security_group.alb.id
 
@@ -157,7 +156,7 @@ resource "aws_security_group" "allow_http_inbound" {
   cidr_blocks = local.all_ips
 }
 
-resource "aws_security_group" "allow_all_outbound" {
+resource "aws_security_group_rule" "alb_allow_all_outbound" {
   type              = "egress"
   security_group_id = aws_security_group.alb.id
 
