@@ -23,7 +23,7 @@ provider "aws" {
 }
 
 module "mysql" {
-  source = "../../../modules/data-stores/mysql"
+  source = "../../../../modules/data-stores/mysql"
 
   db_name     = "terraform-up-and-running-prod"
   db_password = var.db_password
