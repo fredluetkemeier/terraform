@@ -4,6 +4,15 @@ terraform {
       version = "~> 2.0"
     }
   }
+
+  backend "s3" {
+    profile        = "fred.luetkemeier"
+    key            = "live/global/iam/terraform.tfstate"
+    bucket         = "fredluetkemeier-terraform-up-and-running-state"
+    region         = "us-east-2"
+    dynamodb_table = "terraform-up-and-running-locks"
+    encrypt        = true
+  }
 }
 
 provider "aws" {
@@ -31,10 +40,4 @@ resource "aws_iam_user" "example" {
   name     = each.value
 }
 
-output "all_users" {
-  value = aws_iam_user.example
-}
 
-output "all_arns" {
-  value = values(aws_iam_user.example)[*].arn
-}
