@@ -5,9 +5,17 @@ variable "names" {
 }
 
 output "for_directive" {
-  value = <<EOF
+  value = <<-EOF
     %{for name in var.names}
         ${name}
     %{endfor}
+    EOF
+}
+
+output "for_directive_strip_marker" {
+  value = <<-EOF
+    %{~for name in var.names}
+        ${name}
+    %{~endfor}
     EOF
 }
