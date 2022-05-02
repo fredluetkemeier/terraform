@@ -27,31 +27,13 @@ module "webserver_cluster" {
   db_remote_state_bucket = "fredluetkemeier-terraform-up-and-running-state"
   db_remote_state_key    = "prod/data-stores/mysql/terraform.tfstate"
 
-  instance_type = "t2.micro"
-  min_size      = 2
-  max_size      = 10
+  instance_type      = "t2.micro"
+  min_size           = 2
+  max_size           = 10
+  enable_autoscaling = true
 
   custom_tags = {
     Owner      = "team-foo"
     DeployedBy = "terraform"
   }
 }
-
-# resource "aws_autoscaling_schedule" "scale_out_during_business_hours" {
-#   autoscaling_group_name = module.webserver_cluster.asg_name
-#   scheduled_action_name  = "scale_out_during_business_hours"
-#   min_size               = 2
-#   max_size               = 10
-#   desired_capacity       = 10
-#   recurrence             = "0 9 * * *"
-# }
-
-
-# resource "aws_autoscaling_schedule" "scale-in-at-night" {
-#   autoscaling_group_name = module.webserver_cluster.asg_name
-#   scheduled_action_name  = "scale-in-at-night"
-#   min_size               = 2
-#   max_size               = 10
-#   desired_capacity       = 2
-#   recurrence             = "0 17 * * *"
-# }
